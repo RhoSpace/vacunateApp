@@ -11,11 +11,13 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    //Query personalizada
+    // Buscar por rut
     Optional<User> findByRut(String rut);
 
+    // Actualizar rol de usuario
     @Modifying
     @Query("update User set role=:role where rut=:rut")
     void updateUserRole(@Param("RUT") String rut, @Param("ROLE") Role role);
-
+    // Numero de usuarios con el rol de USER
+    int countByRole_User();
 }
