@@ -1,5 +1,6 @@
 package cl.vacunateapp.apigateway.security.jwt;
 
+import cl.vacunateapp.apigateway.entity.User;
 import cl.vacunateapp.apigateway.security.UserPrincipal;
 import cl.vacunateapp.apigateway.utils.SecurityUtils;
 import io.jsonwebtoken.Claims;
@@ -41,6 +42,19 @@ public class JwtProviderImpl implements JwtProvider {
                 .setSubject(userPrincipal.getUsername())
                 .claim("roles", authorities)
                 .claim("userId",userPrincipal.getId())
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_IN_MS))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    @Override
+    public String generateToken(User user) {
+        Key key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+
+        return Jwts.builder()
+                .setSubject(user.getRut())
+                .claim("roles", user.getRole())
+                .claim("userId", user.getId())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_IN_MS))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();

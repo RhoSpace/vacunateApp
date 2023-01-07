@@ -3,6 +3,7 @@ package cl.vacunateapp.apigateway.service;
 import cl.vacunateapp.apigateway.entity.Role;
 import cl.vacunateapp.apigateway.entity.User;
 import cl.vacunateapp.apigateway.repository.UserRepository;
+import cl.vacunateapp.apigateway.security.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtProvider jwtProvider;
+
     // Metodo para guardar usuario
     @Override
     public User saveUser(User user) {
@@ -27,7 +31,11 @@ public class UserServiceImpl implements UserService{
         user.setRole(Role.USER);
         user.setCreationDate(LocalDateTime.now());
 
-        return userRepository.save(user);
+        User userCreated = userRepository.save(user);
+        String tokenJwt = jwtProvider.generateToken(userCreated);
+        userCreated.setToken(tokenJwt);
+
+        return userCreated;
     }
 
     // Metodo para buscar usuarios por rut
@@ -44,8 +52,5 @@ public class UserServiceImpl implements UserService{
     }
 
     // Metodo para obtener el numero total de usuarios con el rol USER
-    @Override
-    public int getCountByRole_User() {
-        return userRepository.countByRole_User();
-    }
+
 }

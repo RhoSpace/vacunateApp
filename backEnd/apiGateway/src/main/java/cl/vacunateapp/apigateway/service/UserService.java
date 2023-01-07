@@ -15,5 +15,5 @@ public interface UserService {
     void changeRole(String rut, Role newRole);
 
     // Metodo para obtener el numero total de usuarios con el rol USER
-    int getCountByRole_User();
+
 }

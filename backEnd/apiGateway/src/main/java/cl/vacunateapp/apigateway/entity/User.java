@@ -17,23 +17,23 @@ public class User {
     @Column(name = "RUT", unique = true, nullable = false, length = 15)
     private String rut;
 
-    @Column(name = "PASSWORD", nullable = false)
-    private String password;
-
     @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
-    @Column(name = "CREATION_DATE", nullable = false)
-    private LocalDateTime creationDate;
+    @Column(name = "PASSWORD", nullable = false)
+    private String password;
 
-    @Column(name = "PHONE", nullable = false)
+    @Column(name = "PHONE")
     private String phone;
 
     @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "CREATION_DATE", nullable = false)
+    private LocalDateTime creationDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ROLE", nullable = false)
