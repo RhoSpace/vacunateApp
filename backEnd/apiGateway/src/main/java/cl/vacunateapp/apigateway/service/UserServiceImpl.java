@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -60,7 +60,8 @@ public class UserServiceImpl implements UserService{
     // Metodo para borrar usuario
     @Override
     public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+        User userToDelete = userRepository.findUserById(id);
+        userRepository.delete(userToDelete);
     }
 
     // Metodo para actualizar datos de un usuario
@@ -70,22 +71,23 @@ public class UserServiceImpl implements UserService{
 
         userNoUpdate.setName(user.getName());
         userNoUpdate.setLastName(user.getLastName());
-        userNoUpdate.setPassword(user.getPassword());
+        userNoUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
         userNoUpdate.setPhone(user.getPhone());
         userNoUpdate.setEmail(user.getEmail());
 
         return userRepository.save(userNoUpdate);
     }
 
-    // Metodo para obtener el numero total de usuarios
+    // Metodo para obtener el numero total de usuarios con rol USER
+    @Override
+    public int getCountOfUserRole() {
+        return userRepository.countUsersByRoleUser();
+    }
 
-    // Metodo para obtener el numero total de usuarios con el rol USER
     // Metodo para actualizar el rol del usuario
     @Override
     @Transactional
     public void changeRole(String rut, Role newRole) {
         userRepository.updateUserRole(rut, newRole);
     }
-
-    // Metodos Auxiliares
 }

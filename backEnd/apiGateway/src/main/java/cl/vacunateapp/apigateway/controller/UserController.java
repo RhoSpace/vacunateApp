@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/user")
@@ -52,6 +51,12 @@ public class UserController {
     public ResponseEntity<User> updateUserById(@RequestParam Long id, @RequestBody User user) {
         userService.updateUserData(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Obtener el numero de usuarios con el rol USUARIO
+    @GetMapping("/count/user")
+    public int getCountOfUserRole() {
+        return userService.getCountOfUserRole();
     }
 
 }

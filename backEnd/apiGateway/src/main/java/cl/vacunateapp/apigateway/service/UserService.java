@@ -26,6 +26,9 @@ public interface UserService {
     // Metodo para actualizar datos de un usuario
     User updateUserData(Long id, User user);
 
+    // Metodo para obtener el numero total de usuarios con rol USER
+    int getCountOfUserRole();
+
     // Metodo para actualizar el rol del usuario
     @Transactional
     void changeRole(String rut, Role newRole);
