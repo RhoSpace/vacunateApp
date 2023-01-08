@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     void deleteById(Long id);
 
+    User findUserById(Long id);
+
     // Numero de usuarios con el rol de USER
 
 }

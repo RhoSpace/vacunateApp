@@ -36,7 +36,7 @@ public class UserController {
 
     // Buscar usuario por id
     @GetMapping("/find/")
-    public ResponseEntity<Optional<User>> findUserById(@RequestParam Long id) {
+    public ResponseEntity<User> findUserById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
@@ -44,6 +44,13 @@ public class UserController {
     @DeleteMapping("/delete/")
     public ResponseEntity<HttpStatus> deleteUserById(@RequestParam Long id) {
         userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Actualizar datos del usuario segun el id
+    @PutMapping("/update/")
+    public ResponseEntity<User> updateUserById(@RequestParam Long id, @RequestBody User user) {
+        userService.updateUserData(id, user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

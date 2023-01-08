@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService{
 
     // Metodo para buscar usuario por id
     @Override
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
+    public User findUserById(Long id) {
+        return userRepository.findUserById(id);
     }
 
     // Metodo para borrar usuario
@@ -64,9 +64,22 @@ public class UserServiceImpl implements UserService{
     }
 
     // Metodo para actualizar datos de un usuario
-    // Metodo para obtener el numero total de usuarios
-    // Metodos Auxiliares
+    @Override
+    public User updateUserData(Long id, User user) {
+        User userNoUpdate = userRepository.findUserById(id);
 
+        userNoUpdate.setName(user.getName());
+        userNoUpdate.setLastName(user.getLastName());
+        userNoUpdate.setPassword(user.getPassword());
+        userNoUpdate.setPhone(user.getPhone());
+        userNoUpdate.setEmail(user.getEmail());
+
+        return userRepository.save(userNoUpdate);
+    }
+
+    // Metodo para obtener el numero total de usuarios
+
+    // Metodo para obtener el numero total de usuarios con el rol USER
     // Metodo para actualizar el rol del usuario
     @Override
     @Transactional
@@ -74,6 +87,5 @@ public class UserServiceImpl implements UserService{
         userRepository.updateUserRole(rut, newRole);
     }
 
-    // Metodo para obtener el numero total de usuarios con el rol USER
-
+    // Metodos Auxiliares
 }
