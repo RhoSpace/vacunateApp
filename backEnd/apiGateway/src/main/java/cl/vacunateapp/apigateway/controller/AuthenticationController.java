@@ -18,13 +18,8 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("holanda")
-    public String saludar() {
-        return "Holanda!";
-    }
-
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody User user) {
+    public ResponseEntity<User> signUp(@RequestBody User user) {
         if (userService.findByRut(user.getRut()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }

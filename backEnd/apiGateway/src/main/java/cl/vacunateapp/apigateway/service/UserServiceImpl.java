@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,11 +39,19 @@ public class UserServiceImpl implements UserService{
         return userCreated;
     }
 
+    // Metodo para buscar todos los usuarios
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
     // Metodo para buscar usuarios por rut
     @Override
     public Optional<User> findByRut(String rut) {
         return userRepository.findByRut(rut);
     }
+
+    //
 
     // Metodo para actualizar el rol del usuario
     @Override
