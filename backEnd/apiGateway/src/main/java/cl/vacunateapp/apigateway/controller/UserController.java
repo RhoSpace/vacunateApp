@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/user")
@@ -30,6 +31,12 @@ public class UserController {
     @GetMapping("/list")
     public ResponseEntity<List<User>> findAllUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    // Buscar usuario por id
+    @GetMapping("find/")
+    public ResponseEntity<Optional<User>> findUserById(@RequestParam Long id) {
+        return ResponseEntity.ok(userService.findUserById(id));
     }
 
 

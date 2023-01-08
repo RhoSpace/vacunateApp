@@ -51,7 +51,21 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByRut(rut);
     }
 
-    //
+    // Metodo para buscar usuario por id
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    // Metodo para borrar usuario
+//    @Override
+//    public void deleteUser(Long id) {
+//        User user = userRepository.findById(id);
+//    }
+
+    // Metodo para actualizar datos de un usuario
+    // Metodo para obtener el numero total de usuarios
+    // Metodos Auxiliares
 
     // Metodo para actualizar el rol del usuario
     @Override
