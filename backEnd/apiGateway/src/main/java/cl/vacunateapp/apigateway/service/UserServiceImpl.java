@@ -58,10 +58,10 @@ public class UserServiceImpl implements UserService{
     }
 
     // Metodo para borrar usuario
-//    @Override
-//    public void deleteUser(Long id) {
-//        User user = userRepository.findById(id);
-//    }
+    @Override
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 
     // Metodo para actualizar datos de un usuario
     // Metodo para obtener el numero total de usuarios

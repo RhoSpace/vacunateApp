@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("update User set role=:role where rut=:rut")
     void updateUserRole(@Param("rut") String rut, @Param("role") Role role);
 
+    void deleteById(Long id);
+
     // Numero de usuarios con el rol de USER
 
 }

@@ -5,6 +5,7 @@ import cl.vacunateapp.apigateway.entity.User;
 import cl.vacunateapp.apigateway.security.UserPrincipal;
 import cl.vacunateapp.apigateway.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +35,16 @@ public class UserController {
     }
 
     // Buscar usuario por id
-    @GetMapping("find/")
+    @GetMapping("/find/")
     public ResponseEntity<Optional<User>> findUserById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.findUserById(id));
     }
 
+    // Eliminar usuario segun id
+    @DeleteMapping("/delete/")
+    public ResponseEntity<HttpStatus> deleteUserById(@RequestParam Long id) {
+        userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

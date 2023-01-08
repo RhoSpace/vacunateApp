@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+
+    // Metodo para guardar usuario
     User saveUser(User user);
 
     // Metodo para buscar todos los usuarios
@@ -17,6 +19,9 @@ public interface UserService {
 
     // Metodo para buscar usuario por id
     Optional<User> findUserById(Long id);
+
+    // Metodo para borrar usuario
+    void deleteUserById(Long id);
 
     //Metodo para actualizar el rol del usuario
     void changeRole(String rut, Role newRole);
