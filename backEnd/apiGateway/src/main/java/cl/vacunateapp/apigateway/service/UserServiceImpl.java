@@ -1,9 +1,13 @@
 package cl.vacunateapp.apigateway.service;
 
+import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.Role;
 import cl.vacunateapp.apigateway.entity.User;
+import cl.vacunateapp.apigateway.exception.badrequest.rut.RutRegisteredException;
 import cl.vacunateapp.apigateway.repository.UserRepository;
-import cl.vacunateapp.apigateway.security.jwt.JwtProvider;
+import cl.vacunateapp.apigateway.utils.DtoUtils;
+import cl.vacunateapp.apigateway.utils.RutUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,21 +27,31 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtProvider jwtProvider;
 
     // Metodo para guardar usuario
     @Override
-    public User saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-        user.setCreationDate(LocalDateTime.now());
+    public UserDto saveUser(UserDto userDto) {
 
-        User userCreated = userRepository.save(user);
-        String tokenJwt = jwtProvider.generateToken(userCreated);
-        userCreated.setToken(tokenJwt);
+        //Compruebo si el rut ya esta registrado
+        checkRutRegistered(userDto);
+        User userToSave = User.builder()
+                .rut(userDto.getRut())
+                .name(userDto.getName())
+                .lastName(userDto.getLastName())
+                .password(passwordEncoder.encode(userDto.getPassword()))
+                .phone(userDto.getPhone())
+                .email(userDto.getEmail())
+                .creationDate(LocalDateTime.now())
+                .role(Role.USER)
+                .build();
+        userRepository.save(userToSave);
+        log.info("Usuario guardado con exito");
 
-        return userCreated;
+        return UserDto.builder()
+                .name(userDto.getName())
+                .lastName(userDto.getLastName())
+                .email(userDto.getEmail())
+                .build();
     }
 
     // Metodo para buscar todos los usuarios
@@ -90,4 +105,11 @@ public class UserServiceImpl implements UserService {
     public void changeRole(String rut, Role newRole) {
         userRepository.updateUserRole(rut, newRole);
     }
+
+    public void checkRutRegistered(UserDto userDto) {
+        if (userRepository.findByRut(userDto.getRut()).isPresent()) {
+            throw new RutRegisteredException(userDto.getRut());
+        }
+    }
+
 }

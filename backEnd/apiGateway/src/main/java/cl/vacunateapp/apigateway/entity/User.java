@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "USERS")
 public class User {
 
@@ -14,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "RUT", unique = true, nullable = false, length = 15)
+    @Column(name = "RUT", unique = true, nullable = false, length = 13)
     private String rut;
 
     @Column(name = "NAME", nullable = false)

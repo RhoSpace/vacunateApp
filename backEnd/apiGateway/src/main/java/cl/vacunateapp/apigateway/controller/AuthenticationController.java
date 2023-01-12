@@ -1,8 +1,11 @@
 package cl.vacunateapp.apigateway.controller;
 
+import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.User;
 import cl.vacunateapp.apigateway.service.AuhenticationService;
 import cl.vacunateapp.apigateway.service.UserService;
+import cl.vacunateapp.apigateway.utils.DtoUtils;
+import cl.vacunateapp.apigateway.utils.RutUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +22,14 @@ public class AuthenticationController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<User> signUp(@RequestBody User user) {
-        if (userService.findByRut(user.getRut()).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<UserDto> signUp(@RequestBody UserDto userDto) {
+        //Compruebo integridad del DTO
+        DtoUtils.checkEmptyNull(userDto);
 
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        //Valido el rut
+        RutUtils.checkValidRut(userDto);
+
+        return new ResponseEntity<>(userService.saveUser(userDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/sign-in")

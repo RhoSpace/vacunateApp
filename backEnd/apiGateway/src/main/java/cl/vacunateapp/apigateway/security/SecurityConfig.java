@@ -24,9 +24,6 @@ public class SecurityConfig {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
@@ -36,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder managerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 
+//        managerBuilder.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder);
         managerBuilder.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder);
 
         AuthenticationManager authenticationManager = managerBuilder.build();
