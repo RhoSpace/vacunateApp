@@ -2,12 +2,10 @@ package cl.vacunateapp.apigateway.service;
 
 
 import cl.vacunateapp.apigateway.dto.UserDto;
-import cl.vacunateapp.apigateway.entity.Role;
 import cl.vacunateapp.apigateway.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
@@ -16,10 +14,10 @@ public interface UserService {
     UserDto saveUser(UserDto userDto);
 
     // Metodo para buscar todos los usuarios
-    List<User> findAllUsers();
+    List<UserDto> findAllUsers();
 
     // Metodo para buscar usuarios por rut
-    Optional<User> findByRut(String rut);
+    User findByRut(String rut);
 
     // Metodo para buscar usuario por id
     User findUserById(Long id);
@@ -35,5 +33,5 @@ public interface UserService {
 
     // Metodo para actualizar el rol del usuario
     @Transactional
-    void changeRole(String rut, Role newRole);
+    void changeRole(String rut, String role);
 }

@@ -24,10 +24,13 @@ public class AuthenticationController {
     @PostMapping("/sign-up")
     public ResponseEntity<UserDto> signUp(@RequestBody UserDto userDto) {
         //Compruebo integridad del DTO
-        DtoUtils.checkEmptyNull(userDto);
+        DtoUtils.checkEmptyNullRut(userDto.getRut());
+        DtoUtils.checkEmptyNullName(userDto);
+        DtoUtils.checkEmptyNullLastName(userDto);
+        DtoUtils.checkEmptyNullPassword(userDto);
 
         //Valido el rut
-        RutUtils.checkValidRut(userDto);
+        RutUtils.checkValidRut(userDto.getRut());
 
         return new ResponseEntity<>(userService.saveUser(userDto), HttpStatus.CREATED);
     }

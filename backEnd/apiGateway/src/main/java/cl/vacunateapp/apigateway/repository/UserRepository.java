@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updateUserRole(@Param("rut") String rut, @Param("role") Role role);
 
     // Buscar por id
-    User findUserById(Long id);
+    Optional<User> findUserById(Long id);
 
     // Numero de usuarios con el rol de USER
     @Query("SELECT COUNT(u) FROM User u WHERE u.role = 'USER'")

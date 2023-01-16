@@ -12,9 +12,9 @@ import java.util.Collection;
 import java.util.Set;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class UserPrincipal implements UserDetails {
 
     private Long id;

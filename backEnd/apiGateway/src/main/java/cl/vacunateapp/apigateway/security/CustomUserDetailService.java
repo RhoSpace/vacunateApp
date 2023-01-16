@@ -21,10 +21,8 @@ public class CustomUserDetailService implements UserDetailsService {
     //Metodo carga los datos del usuario en detalle
     @Override
     public UserDetails loadUserByUsername(String rut) throws UsernameNotFoundException {
-        //Busco usuario
-        User user = userService.findByRut(rut)
-                //Si no lo encuentra
-                .orElseThrow(() -> new UsernameNotFoundException("El rut no fue encontrado: " + rut ));
+
+        User user = userService.findByRut(rut);
 
         //Rol asignado en el formato de spring Security
         Set<GrantedAuthority> authorities = Set.of(SecurityUtils.convertToAuthority(user.getRole().name()));

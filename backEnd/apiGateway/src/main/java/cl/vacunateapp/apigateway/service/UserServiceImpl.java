@@ -3,9 +3,13 @@ package cl.vacunateapp.apigateway.service;
 import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.Role;
 import cl.vacunateapp.apigateway.entity.User;
-import cl.vacunateapp.apigateway.exception.badrequest.rut.RutRegisteredException;
+import cl.vacunateapp.apigateway.exception.badrequest.id.IdNotRegisteredException;
+import cl.vacunateapp.apigateway.exception.badrequest.rut.RutNotRegisteredException;
+import cl.vacunateapp.apigateway.exception.conflict.rut.RutRegisteredException;
 import cl.vacunateapp.apigateway.repository.UserRepository;
 import cl.vacunateapp.apigateway.utils.DtoUtils;
+import cl.vacunateapp.apigateway.utils.IdUtils;
+import cl.vacunateapp.apigateway.utils.RoleUtils;
 import cl.vacunateapp.apigateway.utils.RutUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +35,11 @@ public class UserServiceImpl implements UserService {
     // Metodo para guardar usuario
     @Override
     public UserDto saveUser(UserDto userDto) {
-
         //Compruebo si el rut ya esta registrado
         checkRutRegistered(userDto);
+
         User userToSave = User.builder()
-                .rut(userDto.getRut())
+                .rut(RutUtils.checkValidRut(userDto.getRut()))
                 .name(userDto.getName())
                 .lastName(userDto.getLastName())
                 .password(passwordEncoder.encode(userDto.getPassword()))
@@ -56,39 +60,58 @@ public class UserServiceImpl implements UserService {
 
     // Metodo para buscar todos los usuarios
     @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> findAllUsers() {
+        List<User> userList = userRepository.findAll();
+
+        return userList.stream()
+                .map(user -> UserDto.builder()
+                        .rut(user.getRut())
+                        .name(user.getName())
+                        .lastName(user.getLastName())
+                        .phone(user.getPhone())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .build())
+                .toList();
     }
 
     // Metodo para buscar usuarios por rut
     @Override
-    public Optional<User> findByRut(String rut) {
-        return userRepository.findByRut(rut);
+    public User findByRut(String rut) {
+        DtoUtils.checkEmptyNullRut(rut);
+        RutUtils.checkValidRut(rut);
+
+        return userRepository.findByRut(rut).orElseThrow(() -> new RutNotRegisteredException(rut));
     }
 
     // Metodo para buscar usuario por id
     @Override
     public User findUserById(Long id) {
-        return userRepository.findUserById(id);
+        IdUtils.validateId(id);
+        return userRepository.findUserById(id)
+                .orElseThrow(() -> new IdNotRegisteredException(id.toString()));
     }
 
     // Metodo para borrar usuario
     @Override
     public void deleteUserById(Long id) {
-        User userToDelete = userRepository.findUserById(id);
+        User userToDelete = findUserById(id);
         userRepository.delete(userToDelete);
     }
 
     // Metodo para actualizar datos de un usuario
     @Override
     public User updateUserData(Long id, User user) {
-        User userNoUpdate = userRepository.findUserById(id);
+        //Cargo al usuario que se intenta actualizar
+        User userNoUpdate = findUserById(id);
 
-        userNoUpdate.setName(user.getName());
-        userNoUpdate.setLastName(user.getLastName());
-        userNoUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
-        userNoUpdate.setPhone(user.getPhone());
-        userNoUpdate.setEmail(user.getEmail());
+        //compruebo que datos se van a actualizar
+        Optional.ofNullable(user.getName()).ifPresent(userNoUpdate::setName);
+        Optional.ofNullable(user.getLastName()).ifPresent(userNoUpdate::setLastName);
+        Optional.ofNullable(user.getPassword())
+                .ifPresent(password -> userNoUpdate.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(user.getPhone()).ifPresent(userNoUpdate::setPhone);
+        Optional.ofNullable(user.getEmail()).ifPresent(userNoUpdate::setPhone);
 
         return userRepository.save(userNoUpdate);
     }
@@ -102,14 +125,18 @@ public class UserServiceImpl implements UserService {
     // Metodo para actualizar el rol del usuario
     @Override
     @Transactional
-    public void changeRole(String rut, Role newRole) {
+    public void changeRole(String rut, String role) {
+        DtoUtils.checkEmptyNullRut(rut);
+        RutUtils.checkValidRut(rut);
+        Role newRole = RoleUtils.checkRole(role);
+
         userRepository.updateUserRole(rut, newRole);
     }
 
+    // Metodos auxiliares
     public void checkRutRegistered(UserDto userDto) {
         if (userRepository.findByRut(userDto.getRut()).isPresent()) {
             throw new RutRegisteredException(userDto.getRut());
         }
     }
-
 }
