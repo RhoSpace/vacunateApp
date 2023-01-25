@@ -2,11 +2,18 @@ package cl.vacunateapp.apigateway.utils;
 
 import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.exception.badrequest.lastname.LastNameEmptyException;
-import cl.vacunateapp.apigateway.exception.badrequest.name.BadNameException;
+import cl.vacunateapp.apigateway.exception.badrequest.name.NameEmptyException;
 import cl.vacunateapp.apigateway.exception.badrequest.password.PasswordEmptyException;
 import cl.vacunateapp.apigateway.exception.badrequest.rut.RutEmptyException;
 
 public class DtoUtils {
+
+    public static void checkDto(UserDto userDto) {
+        checkEmptyNullRut(userDto.getRut());
+        checkEmptyNullName(userDto.getName());
+        checkEmptyNullLastName(userDto.getLastName());
+        checkEmptyNullPassword(userDto.getPassword());
+    }
     public static void checkEmptyNullRut(String rut) {
         //Compruebo si el rut existe en el dto
         if (rut == null) {
@@ -16,29 +23,29 @@ public class DtoUtils {
         }
     }
 
-    public static void checkEmptyNullName(UserDto userDto) {
+    public static void checkEmptyNullName(String name) {
         //Compruebo si el nombre existe en el dto
-        if (userDto.getName() == null) {
-            throw new BadNameException("Campo de Nombre nulo");
-        } else if (userDto.getName().isEmpty()) {
-            throw new BadNameException("Campo de Nombre vacio");
+        if (name == null) {
+            throw new NameEmptyException("Campo de Nombre nulo");
+        } else if (name.isEmpty()) {
+            throw new NameEmptyException("Campo de Nombre vacio");
         }
     }
 
-    public static void checkEmptyNullLastName(UserDto userDto) {
+    public static void checkEmptyNullLastName(String lastName) {
         //Compruebo si el apellido existe en el dto
-        if (userDto.getLastName() == null) {
+        if (lastName == null) {
             throw new LastNameEmptyException("Campo de Apellido nulo");
-        } else if (userDto.getLastName().isEmpty()) {
+        } else if (lastName.isEmpty()) {
             throw new LastNameEmptyException("Campo de Apellido vacio");
         }
     }
 
-    public static void checkEmptyNullPassword(UserDto userDto) {
+    public static void checkEmptyNullPassword(String password) {
         //Compruebo si la contraseña existe en el dto
-        if (userDto.getPassword() == null) {
+        if (password == null) {
             throw new PasswordEmptyException("Campo de Contraseña nulo");
-        } else if (userDto.getPassword().isEmpty()) {
+        } else if (password.isEmpty()) {
             throw new PasswordEmptyException("Campo de Contraseña vacio");
         }
     }

@@ -7,7 +7,7 @@ public class RoleUtils {
 
     public static Role checkRole (String role) {
         try {
-            return Role.valueOf(role);
+            return Role.valueOf(role.toUpperCase());
         } catch (Exception e) {
             throw new RoleNotExistException(role);
         }

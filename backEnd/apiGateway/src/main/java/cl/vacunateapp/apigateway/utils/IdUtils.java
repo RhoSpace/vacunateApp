@@ -5,13 +5,18 @@ import cl.vacunateapp.apigateway.exception.badrequest.id.IdLessThanZeroException
 
 public class IdUtils {
 
-    public static void validateId(Long id) {
-        if (id == null) {
-            throw new IdEmptyException("Campo de id nulo");
-        } else if (id.toString().isEmpty()) {
-            throw new IdEmptyException("Campo de id vacio");
+    public static void checkId(Long id) {
+        checkIdEmptyNull(id);
+        checkIdLessThanZero(id);
         }
 
+    private static void checkIdEmptyNull(Long id) {
+        if (id == null) {
+            throw new IdEmptyException("Campo de id nulo");
+        }
+    }
+
+    private static void checkIdLessThanZero(Long id) {
         if (id <= 0) {
             throw new IdLessThanZeroException(id.toString());
         }

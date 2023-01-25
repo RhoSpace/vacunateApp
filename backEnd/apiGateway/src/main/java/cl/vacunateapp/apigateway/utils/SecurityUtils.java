@@ -1,9 +1,12 @@
 package cl.vacunateapp.apigateway.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
+
+@Log4j2
 public class SecurityUtils {
 
     //Prefijo para los roles
@@ -17,14 +20,9 @@ public class SecurityUtils {
 
     //Metodo para convertir el rol en un rol valido para springSecurity
     public static SimpleGrantedAuthority convertToAuthority(String role) {
-
+        RoleUtils.checkRole(role);
         String formattedRole = "";
-
-        if (role.startsWith(ROLE_PREFIX)) {
-            formattedRole = role;
-        } else {
-            formattedRole = ROLE_PREFIX + role;
-        }
+        formattedRole = (role.startsWith(ROLE_PREFIX)) ? role : ROLE_PREFIX + role;
 
         return new SimpleGrantedAuthority(formattedRole);
     }
@@ -36,7 +34,6 @@ public class SecurityUtils {
         if (StringUtils.hasLength(bearerToken) && bearerToken.startsWith(AUTH_TOKEN_PREFIX)) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
 }
