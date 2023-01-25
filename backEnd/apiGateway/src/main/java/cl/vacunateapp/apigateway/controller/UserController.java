@@ -2,6 +2,7 @@ package cl.vacunateapp.apigateway.controller;
 
 import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.User;
+import cl.vacunateapp.apigateway.repository.UserRepository;
 import cl.vacunateapp.apigateway.security.UserPrincipal;
 import cl.vacunateapp.apigateway.service.UserService;
 import cl.vacunateapp.apigateway.utils.RutUtils;
@@ -19,12 +20,14 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     // Cambiar el rol del usuario
     @PutMapping("/change")
-    public ResponseEntity<Boolean> changeRole(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam String role) {
+    public ResponseEntity<String> changeRole(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam String role) {
         userService.changeRole(userPrincipal.getRut(), role);
-        return ResponseEntity.ok(true);
+        return new ResponseEntity<>("Rol Actualizado", HttpStatus.OK);
     }
 
     // Listar todos los usuarios
@@ -37,15 +40,15 @@ public class UserController {
     @GetMapping("/find/id/")
     public ResponseEntity<UserDto> findUserById(@RequestParam Long id) {
         User user = userService.findUserById(id);
-        UserDto userDto = UserDto.builder()
+
+        return new ResponseEntity<>(UserDto.builder()
                 .rut(user.getRut())
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .role(user.getRole())
-                .build();
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+                .build(), HttpStatus.OK);
     }
 
     // Buscar usuario por rut
@@ -54,16 +57,14 @@ public class UserController {
         //Compruebo si el rut es valido y cargo el usuario
         User user = userService.findByRut(RutUtils.checkValidRut(rut));
 
-        //Agrego datos al DTO
-        UserDto userDto = UserDto.builder()
+        return new ResponseEntity<>(UserDto.builder()
                 .rut(user.getRut())
                 .name(user.getName())
                 .lastName(user.getLastName())
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .role(user.getRole())
-                .build();
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+                .build(), HttpStatus.OK);
     }
 
     // Eliminar usuario segun id
@@ -75,14 +76,13 @@ public class UserController {
 
     // Actualizar datos del usuario segun el id
     @PutMapping("/update/")
-    public ResponseEntity<User> updateUserById(@RequestParam Long id, @RequestBody User user) {
-        userService.updateUserData(id, user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<UserDto> updateUserById(@RequestParam Long id, @RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.updateUserData(id, userDto),HttpStatus.OK);
     }
 
     // Obtener el numero de usuarios con el rol USUARIO
     @GetMapping("/count/user")
-    public int getCountOfUserRole() {
-        return userService.getCountOfUserRole();
+    public ResponseEntity<Integer> getCountOfUserRole() {
+        return new ResponseEntity<>(userService.getCountOfUserRole(), HttpStatus.OK);
     }
 }
