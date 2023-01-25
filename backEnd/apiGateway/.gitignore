@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/src/test/java/cl/vacunateapp/apigateway/controller/
+/src/test/java/cl/vacunateapp/apigateway/service/
+/src/test/java/cl/vacunateapp/apigateway/utils/
