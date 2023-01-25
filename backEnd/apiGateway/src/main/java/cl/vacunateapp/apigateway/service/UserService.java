@@ -26,7 +26,7 @@ public interface UserService {
     void deleteUserById(Long id);
 
     // Metodo para actualizar datos de un usuario
-    User updateUserData(Long id, User user);
+    UserDto updateUserData(Long id, UserDto userDto);
 
     // Metodo para obtener el numero total de usuarios con rol USER
     int getCountOfUserRole();

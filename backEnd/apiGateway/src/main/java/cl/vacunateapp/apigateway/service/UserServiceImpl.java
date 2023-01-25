@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
                 .role(Role.USER)
                 .build();
         userRepository.save(userToSave);
-        log.info("Usuario guardado con exito");
 
         return UserDto.builder()
                 .name(userDto.getName())
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
     // Metodo para buscar usuario por id
     @Override
     public User findUserById(Long id) {
-        IdUtils.validateId(id);
+        IdUtils.checkId(id);
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new IdNotRegisteredException(id.toString()));
     }
@@ -101,19 +100,28 @@ public class UserServiceImpl implements UserService {
 
     // Metodo para actualizar datos de un usuario
     @Override
-    public User updateUserData(Long id, User user) {
+    public UserDto updateUserData(Long id, UserDto userDto) {
         //Cargo al usuario que se intenta actualizar
         User userNoUpdate = findUserById(id);
 
         //compruebo que datos se van a actualizar
-        Optional.ofNullable(user.getName()).ifPresent(userNoUpdate::setName);
-        Optional.ofNullable(user.getLastName()).ifPresent(userNoUpdate::setLastName);
-        Optional.ofNullable(user.getPassword())
+        Optional.ofNullable(userDto.getName()).ifPresent(userNoUpdate::setName);
+        Optional.ofNullable(userDto.getLastName()).ifPresent(userNoUpdate::setLastName);
+        Optional.ofNullable(userDto.getPassword())
                 .ifPresent(password -> userNoUpdate.setPassword(passwordEncoder.encode(password)));
-        Optional.ofNullable(user.getPhone()).ifPresent(userNoUpdate::setPhone);
-        Optional.ofNullable(user.getEmail()).ifPresent(userNoUpdate::setPhone);
+        Optional.ofNullable(userDto.getPhone()).ifPresent(userNoUpdate::setPhone);
+        Optional.ofNullable(userDto.getEmail()).ifPresent(userNoUpdate::setEmail);
 
-        return userRepository.save(userNoUpdate);
+        userRepository.save(userNoUpdate);
+
+        return UserDto.builder()
+                .rut(userNoUpdate.getRut())
+                .name(userNoUpdate.getName())
+                .lastName(userNoUpdate.getLastName())
+                .phone(userNoUpdate.getPhone())
+                .email(userNoUpdate.getEmail())
+                .role(userNoUpdate.getRole())
+                .build();
     }
 
     // Metodo para obtener el numero total de usuarios con rol USER

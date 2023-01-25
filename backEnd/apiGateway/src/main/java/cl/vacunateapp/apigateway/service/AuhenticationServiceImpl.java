@@ -1,5 +1,6 @@
 package cl.vacunateapp.apigateway.service;
 
+import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.User;
 import cl.vacunateapp.apigateway.security.UserPrincipal;
 import cl.vacunateapp.apigateway.security.jwt.JwtProvider;
@@ -19,7 +20,7 @@ public class AuhenticationServiceImpl implements AuhenticationService{
     private JwtProvider jwtProvider;
 
     @Override
-    public User signInAndReturnJWT(User signInRequest) {
+    public UserDto signInAndReturnJWT(UserDto signInRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signInRequest.getRut(), signInRequest.getPassword()));
 
@@ -29,6 +30,12 @@ public class AuhenticationServiceImpl implements AuhenticationService{
         User sigInUser = userPrincipal.getUser();
         sigInUser.setToken(tokenJwt);
 
-        return sigInUser;
+        return UserDto.builder()
+                .rut(sigInUser.getRut())
+                .name(sigInUser.getName())
+                .lastName(sigInUser.getLastName())
+                .role(sigInUser.getRole())
+                .token(sigInUser.getToken())
+                .build();
     }
 }
