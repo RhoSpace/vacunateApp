@@ -1,13 +1,15 @@
 package cl.vacunateapp.microservice_patient.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "PATIENT")
 public class Patient {
 
