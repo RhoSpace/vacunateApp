@@ -1,9 +1,8 @@
 package cl.vacunateapp.apigateway.controller;
 
 import cl.vacunateapp.apigateway.dto.UserDto;
-import cl.vacunateapp.apigateway.entity.User;
-import cl.vacunateapp.apigateway.service.AuhenticationService;
-import cl.vacunateapp.apigateway.service.UserService;
+import cl.vacunateapp.apigateway.service.authentication.AuthenticationService;
+import cl.vacunateapp.apigateway.service.user.UserService;
 import cl.vacunateapp.apigateway.utils.DtoUtils;
 import cl.vacunateapp.apigateway.utils.RutUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private AuhenticationService auhenticationService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     private UserService userService;
@@ -31,6 +30,6 @@ public class AuthenticationController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<UserDto> signIn(@RequestBody UserDto userDto) {
-        return new ResponseEntity<>(auhenticationService.signInAndReturnJWT(userDto), HttpStatus.OK);
+        return new ResponseEntity<>(authenticationService.signInAndReturnJWT(userDto), HttpStatus.OK);
     }
 }
