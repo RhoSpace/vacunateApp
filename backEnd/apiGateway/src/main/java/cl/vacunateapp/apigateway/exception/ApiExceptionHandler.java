@@ -72,7 +72,7 @@ public class ApiExceptionHandler {
             AccessDeniedException.class
     })
     public void unauthorized() {
-        //El protocolo http no autirizado no soporta mensajes en el cuerpo
+        //El protocolo http no autorizado, no soporta mensajes en el cuerpo
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
