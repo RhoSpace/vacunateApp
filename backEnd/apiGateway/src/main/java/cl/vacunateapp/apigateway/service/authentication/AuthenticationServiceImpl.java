@@ -1,4 +1,4 @@
-package cl.vacunateapp.apigateway.service;
+package cl.vacunateapp.apigateway.service.authentication;
 
 import cl.vacunateapp.apigateway.dto.UserDto;
 import cl.vacunateapp.apigateway.entity.User;
@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuhenticationServiceImpl implements AuhenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
