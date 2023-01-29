@@ -20,7 +20,6 @@ public class SecurityUtils {
 
     //Metodo para convertir el rol en un rol valido para springSecurity
     public static SimpleGrantedAuthority convertToAuthority(String role) {
-        RoleUtils.checkRole(role);
         String formattedRole = "";
         formattedRole = (role.startsWith(ROLE_PREFIX)) ? role : ROLE_PREFIX + role;
 
