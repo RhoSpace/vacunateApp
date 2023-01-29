@@ -22,4 +22,6 @@ public class PatientDto {
     private String email;
 
     private LocalDateTime creationDate;
+
+    private boolean vaccinated;
 }
