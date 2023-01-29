@@ -21,7 +21,7 @@ public class PatientController {
 
     // Guardar un paciente
     @PostMapping("/save")
-    public ResponseEntity<PatientDto> signUp(@RequestBody PatientDto patientDto) {
+    public ResponseEntity<PatientDto> savePatient(@RequestBody PatientDto patientDto) {
         DtoUtils.checkDto(patientDto);
         RutUtils.checkValidRut(patientDto.getRut());
 
@@ -30,13 +30,13 @@ public class PatientController {
 
     // Listar todos los pacientes
     @GetMapping("/list")
-    public ResponseEntity<List<PatientDto>> findAllUsers() {
+    public ResponseEntity<List<PatientDto>> findAllPatient() {
         return new ResponseEntity<>(patientService.findAllPatients(), HttpStatus.OK);
     }
 
     // Buscar paciente por id
     @GetMapping("/find/id/")
-    public ResponseEntity<PatientDto> findUserById(@RequestParam Long id) {
+    public ResponseEntity<PatientDto> findPatientById(@RequestParam Long id) {
         Patient user = patientService.findPatientById(id);
 
         return new ResponseEntity<>(PatientDto.builder()
@@ -50,7 +50,7 @@ public class PatientController {
 
     // Buscar usuario por rut
     @GetMapping("/find/rut/")
-    public ResponseEntity<PatientDto> findUserByRut(@RequestParam String rut) {
+    public ResponseEntity<PatientDto> findPatientByRut(@RequestParam String rut) {
         //Compruebo si el rut es valido y cargo el usuario
         Patient user = patientService.findPatientByRut(RutUtils.checkValidRut(rut));
 
@@ -65,14 +65,20 @@ public class PatientController {
 
     // Actualizar datos del paciente segun el id
     @PutMapping("/update/")
-    public ResponseEntity<PatientDto> updateUserById(@RequestParam Long id, @RequestBody PatientDto patientDto) {
+    public ResponseEntity<PatientDto> updatePatientById(@RequestParam Long id, @RequestBody PatientDto patientDto) {
         return new ResponseEntity<>(patientService.updatePatientData(id, patientDto),HttpStatus.OK);
     }
 
     // Eliminar usuario segun id
     @DeleteMapping("/delete/")
-    public ResponseEntity<HttpStatus> deleteUserById(@RequestParam Long id) {
+    public ResponseEntity<HttpStatus> deletePatientById(@RequestParam Long id) {
         patientService.deletePatientById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Obtener el numero total de pacientes vacunados
+    @GetMapping("/count/patient")
+    public ResponseEntity<Integer> getCountOfPatient() {
+        return new ResponseEntity<>(patientService.getCountOfPatient(), HttpStatus.OK);
     }
 }
