@@ -4,6 +4,8 @@ import cl.vacunateapp.microservice_vaccine.dto.VaccineDto;
 import cl.vacunateapp.microservice_vaccine.entity.Vaccine;
 import cl.vacunateapp.microservice_vaccine.exception.badrequest.id.IdNotRegisteredException;
 import cl.vacunateapp.microservice_vaccine.repository.VaccineRepository;
+import cl.vacunateapp.microservice_vaccine.utils.AmountUtils;
+import cl.vacunateapp.microservice_vaccine.utils.DtoUtils;
 import cl.vacunateapp.microservice_vaccine.utils.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,8 +41,12 @@ public class VaccineServiceImpl implements VaccineService{
     @Override
     @Transactional
     public VaccineDto updateVaccineCount(Long id, VaccineDto vaccineDto) {
+        DtoUtils.checkEmptyNullVaccine(vaccineDto.getAmount());
+        AmountUtils.checkAmountLessThanZero(vaccineDto.getAmount());
+
         Vaccine actualVaccine = findVaccineById(id);
         vaccineRepository.updateVaccineCount(actualVaccine.getName(), actualVaccine.getAmount() + vaccineDto.getAmount());
+
         return VaccineDto.builder()
                 .name(actualVaccine.getName())
                 .amount(actualVaccine.getAmount() + vaccineDto.getAmount())
@@ -57,6 +63,8 @@ public class VaccineServiceImpl implements VaccineService{
 
         //Restar una vacuna
         Vaccine actualVaccine = findVaccineById(id);
+        AmountUtils.checkAmountEqualZero(actualVaccine.getAmount());
+
         vaccineRepository.updateVaccineCount(actualVaccine.getName(), actualVaccine.getAmount() - 1);
         return VaccineDto.builder()
                 .name(actualVaccine.getName())
