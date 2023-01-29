@@ -24,24 +24,26 @@ public class PatientServiceImpl implements PatientService{
 
     // Metodo para guardar usuario
     @Override
-    public PatientDto savePatient(PatientDto userDto) {
+    public PatientDto savePatient(PatientDto patientDto) {
         //Compruebo si el rut ya esta registrado
-        checkRutRegistered(userDto);
+        checkRutRegistered(patientDto);
 
         Patient patientToSave = Patient.builder()
-                .rut(RutUtils.checkValidRut(userDto.getRut()))
-                .name(userDto.getName())
-                .lastName(userDto.getLastName())
-                .phone(userDto.getPhone())
-                .email(userDto.getEmail())
+                .rut(RutUtils.checkValidRut(patientDto.getRut()))
+                .name(patientDto.getName())
+                .lastName(patientDto.getLastName())
+                .phone(patientDto.getPhone())
+                .email(patientDto.getEmail())
                 .creationDate(LocalDateTime.now())
+                .vaccinated(true)
                 .build();
         patientRepository.save(patientToSave);
 
         return PatientDto.builder()
-                .name(userDto.getName())
-                .lastName(userDto.getLastName())
-                .email(userDto.getEmail())
+                .name(patientDto.getName())
+                .lastName(patientDto.getLastName())
+                .email(patientDto.getEmail())
+                .vaccinated(patientToSave.isVaccinated())
                 .build();
     }
 
@@ -57,6 +59,7 @@ public class PatientServiceImpl implements PatientService{
                         .lastName(user.getLastName())
                         .phone(user.getPhone())
                         .email(user.getEmail())
+                        .vaccinated(user.isVaccinated())
                         .build())
                 .toList();
     }
@@ -87,15 +90,15 @@ public class PatientServiceImpl implements PatientService{
 
     // Metodo para actualizar datos de un usuario
     @Override
-    public PatientDto updatePatientData(Long id, PatientDto userDto) {
+    public PatientDto updatePatientData(Long id, PatientDto patientDto) {
         //Cargo al usuario que se intenta actualizar
         Patient patientNoUpdate = findPatientById(id);
 
         //compruebo que datos se van a actualizar
-        Optional.ofNullable(userDto.getName()).ifPresent(patientNoUpdate::setName);
-        Optional.ofNullable(userDto.getLastName()).ifPresent(patientNoUpdate::setLastName);
-        Optional.ofNullable(userDto.getPhone()).ifPresent(patientNoUpdate::setPhone);
-        Optional.ofNullable(userDto.getEmail()).ifPresent(patientNoUpdate::setEmail);
+        Optional.ofNullable(patientDto.getName()).ifPresent(patientNoUpdate::setName);
+        Optional.ofNullable(patientDto.getLastName()).ifPresent(patientNoUpdate::setLastName);
+        Optional.ofNullable(patientDto.getPhone()).ifPresent(patientNoUpdate::setPhone);
+        Optional.ofNullable(patientDto.getEmail()).ifPresent(patientNoUpdate::setEmail);
 
         patientRepository.save(patientNoUpdate);
 
@@ -105,13 +108,26 @@ public class PatientServiceImpl implements PatientService{
                 .lastName(patientNoUpdate.getLastName())
                 .phone(patientNoUpdate.getPhone())
                 .email(patientNoUpdate.getEmail())
+                .vaccinated(patientDto.isVaccinated())
                 .build();
     }
 
     // Metodos auxiliares
-    public void checkRutRegistered(PatientDto userDto) {
-        if (patientRepository.findPatientByRut(userDto.getRut()).isPresent()) {
-            throw new RutRegisteredException(userDto.getRut());
+    public void checkRutRegistered(PatientDto patientDto) {
+        patientDto.setRut(RutUtils.checkValidRut(patientDto.getRut()));
+
+        if (patientRepository.findPatientByRut(patientDto.getRut()).isPresent()) {
+            throw new RutRegisteredException(patientDto.getRut());
         }
+    }
+
+    // Metodo para obtener el numero total de pacientes vacunados
+    @Override
+    public int getCountOfPatient() {
+        return patientRepository.findAll()
+                .stream()
+                .filter(Patient::isVaccinated)
+                .toList()
+                .size();
     }
 }
