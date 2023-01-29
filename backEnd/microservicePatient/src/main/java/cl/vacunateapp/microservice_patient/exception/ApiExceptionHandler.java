@@ -9,8 +9,8 @@ import jakarta.ws.rs.ForbiddenException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+//import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.nio.file.AccessDeniedException;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
@@ -37,7 +39,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
             BadRequestException.class,
-            BadCredentialsException.class,
+//            BadCredentialsException.class,
             DuplicateKeyException.class,
             HttpRequestMethodNotSupportedException.class,
             MethodArgumentNotValidException.class,
