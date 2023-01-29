@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PatientService {
     // Metodo para guardar usuario
-    PatientDto savePatient(PatientDto userDto);
+    PatientDto savePatient(PatientDto patientDto);
 
     // Metodo para buscar todos los usuarios
     List<PatientDto> findAllPatients();
@@ -22,5 +22,8 @@ public interface PatientService {
     void deletePatientById(Long id);
 
     // Metodo para actualizar datos de un usuario
-    PatientDto updatePatientData(Long id, PatientDto userDto);
+    PatientDto updatePatientData(Long id, PatientDto patientDto);
+
+    // Metodo para obtener el numero total de pacientes vacunados
+    int getCountOfPatient();
 }
