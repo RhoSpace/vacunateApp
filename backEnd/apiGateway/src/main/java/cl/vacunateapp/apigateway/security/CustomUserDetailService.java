@@ -1,7 +1,7 @@
 package cl.vacunateapp.apigateway.security;
 
 import cl.vacunateapp.apigateway.entity.User;
-import cl.vacunateapp.apigateway.service.UserService;
+import cl.vacunateapp.apigateway.service.user.UserService;
 import cl.vacunateapp.apigateway.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +21,6 @@ public class CustomUserDetailService implements UserDetailsService {
     //Metodo carga los datos del usuario en detalle
     @Override
     public UserDetails loadUserByUsername(String rut) throws UsernameNotFoundException {
-
         User user = userService.findByRut(rut);
 
         //Rol asignado en el formato de spring Security
